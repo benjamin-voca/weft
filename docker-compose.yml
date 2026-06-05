@@ -1,0 +1,87 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: weft-app
+    image: weft:latest
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      Database__Provider: postgres
+      Database__ConnectionString: Host=prod-db;Port=5432;Database=weft;Username=weft;Password=weft
+    depends_on:
+      prod-db:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "-qO-",
+          "http://localhost:8080/health",
+          "||",
+          "exit",
+          "1",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - weft-network
+    profiles:
+      - server
+
+  prod-db:
+    image: postgres:16-alpine
+    container_name: weft-prod-db
+    restart: always
+    environment:
+      POSTGRES_USER: weft
+      POSTGRES_PASSWORD: weft
+      POSTGRES_DB: weft
+    volumes:
+      - postgres_prod_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U weft -d weft"]
+      interval: 1s
+      timeout: 1s
+      retries: 25
+    networks:
+      - weft-network
+    profiles:
+      - server
+
+  # Development database with exposed port for local development tools
+  db:
+    image: postgres:16-alpine
+    container_name: weft-db
+    restart: always
+    environment:
+      POSTGRES_USER: weft
+      POSTGRES_PASSWORD: weft
+      POSTGRES_DB: weft
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    ports:
+      - "6970:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U weft -d weft"]
+      interval: 1s
+      timeout: 1s
+      retries: 25
+    networks:
+      - weft-network
+    profiles:
+      - dev
+
+volumes:
+  postgres_prod_data:
+  postgres_dev_data:
+
+networks:
+  weft-network:
+    driver: bridge

@@ -1,9 +1,17 @@
+# Node
 node_modules/
+dist/
+playwright-report/
+test-results/
+
+# .NET
 bin/
 obj/
-.DS_Store
-dist/
-test-results/
-playwright-report/
 *.user
+
+# Editor / OS
+.DS_Store
+
+# built SPA served by the API
 src/Weft.Api/wwwroot/
+client/tsconfig.tsbuildinfo

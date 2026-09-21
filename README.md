@@ -41,6 +41,22 @@ are saved by retries, and a `"force": "fail"` in the job data always fails.
   The multi-stage `Dockerfile` builds the client, publishes the API, and
   Kestrel serves the SPA + API from one container on :8080.
 
+## Command line (`bldr`)
+
+The web console has a terminal twin: `bldr`, a C# CLI over the same API.
+
+```bash
+bldr login
+bldr use "Coffee Run"
+bldr add Bella --source //characters/bella/bella_rig.blend
+bldr edit Bella --samples 256 --enable turntable
+bldr commit -m "firstrig"
+bldr log Bella
+bldr render Bella final
+```
+
+Full manual: [docs/CLI.md](docs/CLI.md). Build: `dotnet publish src/Weft.Cli -c Release -o ~/.bldr/bin`.
+
 ## Seeded account
 
 | email              | password |

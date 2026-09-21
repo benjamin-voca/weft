@@ -1,8 +1,10 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/Weft.Api/Weft.Api.csproj" />
+    <Project Path="src/Weft.Cli/Weft.Cli.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Weft.Api.Tests/Weft.Api.Tests.csproj" />
+    <Project Path="tests/Weft.Cli.Tests/Weft.Cli.Tests.csproj" />
   </Folder>
 </Solution>
